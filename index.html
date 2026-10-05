@@ -453,7 +453,7 @@ document.getElementById("qShow").onclick = () => {
   backToQuiz = true;
 };
 let quizOpener = null;
-function openQuiz() { quizOpener = document.activeElement; quiz.hidden = false; if (!q) newQuestion(); document.getElementById("qClose").focus(); }
+function openQuiz() { quizOpener = document.activeElement; quiz.hidden = false; newQuestion(); document.getElementById("qClose").focus(); }
 function closeQuiz() { quiz.hidden = true; quizOpener?.focus(); }
 document.getElementById("quizBtn").onclick = openQuiz;
 document.getElementById("qClose").onclick = closeQuiz;
