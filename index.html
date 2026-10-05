@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Babymijlpalen 0–18 maanden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: kalendermatrix — kolommen zijn leeftijden, rijen zijn ontwikkelgebieden; elke cel één icoon met een paar woorden */
+:root {
+  --bg: #f2f5f7;
+  --surface: #ffffff;
+  --ink: #1d2a3a;
+  --muted: #64738a;
+  --line: #e1e7ed;
+  --accent: #e0785a;
+  --accent-soft: #fdf0ea;
+  --grof: #2f6fb3;
+  --fijn: #4b97d6;
+  --senso: #3aa0a8;
+  --socmo: #d17a2a;
+  --soc: #d0506f;
+  --cog: #2f9a6a;
+  --taal: #8a5cc2;
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121a24; --surface: #1a2533; --ink: #e6edf4; --muted: #9aaabb; --line: #2a3747;
+    --accent: #f0937a; --accent-soft: #33241f;
+    --grof: #7fb2e6; --fijn: #9ccaf0; --senso: #6fd0d6; --socmo: #f0ae6a; --soc: #ef8aa3; --cog: #6cceaa; --taal: #b996e6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121a24; --surface: #1a2533; --ink: #e6edf4; --muted: #9aaabb; --line: #2a3747;
+  --accent: #f0937a; --accent-soft: #33241f;
+  --grof: #7fb2e6; --fijn: #9ccaf0; --senso: #6fd0d6; --socmo: #f0ae6a; --soc: #ef8aa3; --cog: #6cceaa; --taal: #b996e6;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.3; padding: 0 16px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 36px 56px; display: grid; gap: 22px; }
+
+header { display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: end; justify-content: space-between; }
+h1 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em; font-size: clamp(1.9rem, 5vw, 2.8rem); line-height: 1.05; margin: 0; text-wrap: balance; }
+h1 span { color: var(--accent); }
+.dob { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--muted); }
+.dob input { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; min-height: 38px; }
+.dob input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 1060px; }
+th, td { border-bottom: 1px solid var(--line); }
+tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
+
+thead th { padding: 14px 6px 10px; text-align: center; vertical-align: bottom; font-weight: 400; }
+thead th.corner { text-align: left; padding-left: 16px; }
+.num { display: block; font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.num small { font-size: 0.8rem; font-weight: 600; color: var(--muted); letter-spacing: 0; margin-left: 2px; }
+.phase { display: block; font-size: 0.7rem; color: var(--muted); margin-top: 4px; }
+
+tbody th { position: sticky; left: 0; z-index: 1; background: var(--surface); text-align: left; padding: 10px 12px 10px 16px; width: 150px; font-size: 0.85rem; font-weight: 700; color: var(--c); }
+tbody th span { display: flex; align-items: center; gap: 8px; }
+tbody th span::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; }
+tbody th em { display: block; font-style: normal; font-weight: 400; font-size: 0.72rem; color: var(--muted); margin: 2px 0 0 18px; }
+tr.group th { position: sticky; left: 0; padding: 12px 16px 4px; font-size: 0.72rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); border-bottom: 0; background: var(--surface); }
+tr.group td { border-bottom: 0; }
+
+td { padding: 8px 5px; text-align: center; vertical-align: top; width: 11%; }
+.cell { display: grid; justify-items: center; gap: 4px; font-size: 0.8rem; font-weight: 700; padding: 8px 4px; border-radius: 10px; background: color-mix(in srgb, var(--c) 9%, var(--surface)); height: 100%; }
+.cell .ic { font-size: 1.6rem; line-height: 1; }
+.cell small { font-weight: 400; color: var(--muted); font-size: 0.7rem; }
+td.now, th.now { background: var(--accent-soft); }
+thead th.now .num { color: var(--accent); }
+.badge { display: inline-block; margin-top: 6px; background: var(--accent); color: var(--surface); font-size: 0.68rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
+
+.hint { display: none; font-size: 0.8rem; color: var(--muted); margin: -10px 0 0; }
+@media (max-width: 1100px) { .hint { display: block; } }
+.hint.show { display: block; margin-top: -10px; }
+
+footer { color: var(--muted); font-size: 0.85rem; margin: 0; max-width: 80ch; display: grid; gap: 6px; }
+footer p { margin: 0; }
+
+button.cell { font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--ink); border: 1px solid transparent; width: 100%; cursor: pointer; transition: transform .12s, border-color .12s; }
+button.cell:hover { border-color: var(--c); transform: translateY(-1px); }
+button.cell:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { button.cell { transition: none; } button.cell:hover { transform: none; } }
+
+.sheet { position: fixed; inset: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 40%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); display: grid; place-items: center; padding: 16px; }
+.sheet[hidden] { display: none !important; }
+.panel { position: relative; background: var(--surface); border-radius: 20px; border-top: 6px solid var(--c); width: min(440px, 100%); max-height: 90vh; overflow-y: auto; padding: 24px; display: grid; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+.panel .big { font-size: 3rem; line-height: 1; }
+.panel h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; line-height: 1.15; margin: 0; text-wrap: balance; }
+.panel .meta { font-size: 0.8rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--c); margin: 0; }
+.panel .term { justify-self: start; font-size: 0.78rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: color-mix(in srgb, var(--c) 14%, var(--surface)); }
+.panel p { margin: 0; line-height: 1.5; }
+.panel .tipbox { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; font-size: 0.93rem; }
+.panel .tipbox b { display: block; font-size: 0.75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 2px; }
+.panel .kader { border: 1px dashed var(--line); border-radius: 12px; padding: 12px 14px; font-size: 0.85rem; color: var(--muted); line-height: 1.45; }
+.panel .kader b { display: block; font-size: 0.75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); margin-bottom: 2px; }
+.close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 1.2rem; cursor: pointer; line-height: 1; }
+.close:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 600px) { .sheet { place-items: end stretch; padding: 0; } .panel { width: 100%; border-radius: 20px 20px 0 0; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); } }
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.quizbtn { font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; border: 0; border-radius: 999px; padding: 10px 20px; background: var(--accent); color: var(--surface); }
+.quizbtn:hover { filter: brightness(1.05); }
+.quizbtn:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+.qpanel { width: min(560px, 100%); border-top-color: var(--accent); }
+.qscore { font-size: 0.8rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin: 0; font-variant-numeric: tabular-nums; }
+.qtile { justify-self: center; display: grid; justify-items: center; gap: 8px; background: var(--tile, var(--bg)); border-radius: 16px; padding: 18px 26px; text-align: center; font-weight: 700; font-size: 1.05rem; min-width: 200px; }
+.qtile .ic { font-size: 3rem; line-height: 1; }
+.qq { font-size: 0.78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 4px 0 0; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt { font: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer; border-radius: 999px; padding: 7px 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); display: inline-flex; align-items: center; gap: 7px; }
+.opt[data-c]::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--oc); }
+.opt[aria-pressed="true"] { border-color: var(--ink); background: var(--bg); }
+.opt.right { border-color: var(--cog); background: color-mix(in srgb, var(--cog) 18%, var(--surface)); }
+.opt.wrong { border-color: var(--soc); background: color-mix(in srgb, var(--soc) 15%, var(--surface)); text-decoration: line-through; }
+.opt:disabled { cursor: default; }
+.opt:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.qfeedback { border-radius: 12px; padding: 12px 14px; background: var(--bg); font-size: 0.93rem; line-height: 1.45; display: grid; gap: 4px; }
+.qfeedback strong { font-family: var(--font-display); font-size: 1.15rem; }
+.qbar { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.qbar button { font: inherit; font-weight: 700; cursor: pointer; border-radius: 999px; padding: 9px 18px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.qbar button.primary { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.qbar button:disabled { opacity: .4; cursor: default; }
+.qbar button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>Babymijlpalen <span>0–18</span> mnd</h1>
+    <div class="actions">
+      <button type="button" class="quizbtn" id="quizBtn">🎯 Quiz</button>
+      <label class="dob" for="dob">Geboren op <input type="date" id="dob"></label>
+    </div>
+  </header>
+
+  <div class="table-wrap">
+    <table id="tbl" aria-label="Mijlpalen per leeftijd en ontwikkelgebied"></table>
+  </div>
+  <p class="hint">Veeg opzij voor alle leeftijden →</p>
+  <p class="hint show">Tik op een icoon voor uitleg.</p>
+
+  <footer>
+    <p><b>Elke baby heeft een eigen tempo.</b> Leeftijden zijn gemiddelden. Twijfel je? Vraag het consultatiebureau.</p>
+    <p>Kolomkoppen: fase volgens Piaget (sensomotorische fase) en hechtingsfase volgens Bowlby. Leeftijden zijn vooral gebaseerd op de CDC-mijlpalen (2022, het moment waarop ca. 75% van de kinderen het kan) en de WHO Motor Development Study (2006), aangevuld met de klassieke theorieën van Piaget, Bowlby, Ainsworth en Erikson. Klik op een icoon voor de bron per mijlpaal.</p>
+  </footer>
+</div>
+
+
+<div class="sheet" id="quiz" hidden>
+  <div class="panel qpanel" role="dialog" aria-modal="true" aria-labelledby="qTitle">
+    <button type="button" class="close" id="qClose" aria-label="Quiz sluiten">×</button>
+    <p class="qscore" id="qScore"></p>
+    <h2 id="qTitle">Waar hoort deze tegel?</h2>
+    <div class="qtile" id="qTile"></div>
+    <p class="qq">Welk ontwikkelgebied?</p>
+    <div class="opts" id="qDomains"></div>
+    <p class="qq">Welke leeftijd?</p>
+    <div class="opts" id="qAges"></div>
+    <div class="qfeedback" id="qFeedback" hidden aria-live="polite"></div>
+    <div class="qbar">
+      <button type="button" id="qShow">Uitleg</button>
+      <button type="button" class="primary" id="qCheck" disabled>Controleer</button>
+      <button type="button" class="primary" id="qNext" hidden>Volgende →</button>
+    </div>
+  </div>
+</div>
+<div class="sheet" id="sheet" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+    <button type="button" class="close" id="sClose" aria-label="Sluiten">×</button>
+    <span class="big" id="sIc" aria-hidden="true"></span>
+    <p class="meta" id="sMeta"></p>
+    <h2 id="sTitle"></h2>
+    <span class="term" id="sTerm"></span>
+    <p id="sText"></p>
+    <div class="tipbox"><b>Zo help je mee</b><span id="sTip"></span></div>
+    <div class="kader"><b>Waarop is deze leeftijd gebaseerd?</b><span id="sKader"></span></div>
+  </div>
+</div>
+
+<script>
+const AGES = [
+  { m: 0,  piaget: "Reflexen",        hecht: "Voorhechting" },
+  { m: 2,  piaget: "Eigen lichaam",   hecht: "Hechting in wording" },
+  { m: 4,  piaget: "Effect herhalen", hecht: "Hechting in wording" },
+  { m: 6,  piaget: "Effect herhalen", hecht: "Voorkeur eigen mensen" },
+  { m: 9,  piaget: "Doelgericht",     hecht: "Echte hechting" },
+  { m: 12, piaget: "Doelgericht",     hecht: "Veilige basis" },
+  { m: 15, piaget: "Experimenteren",  hecht: "Veilige basis" },
+  { m: 18, piaget: "Begin verbeelding", hecht: "Op weg naar autonomie" }
+];
+
+// Elke cel: [icoon, kort label, vakterm, uitleg, tip]
+const ROWS = [
+  { group: "Motoriek" },
+  { name: "Grove motoriek", sub: "romp, armen, benen", c: "var(--grof)", cells: [
+    ["🦵","Trappelt, reflexen","", "Pasgeborenen bewegen vooral via reflexen, zoals de schrikreflex (Moro) en de stapreflex. Deze verdwijnen in de eerste maanden, als de hersenen bewegingen bewust gaan sturen.", "Geef ruimte om vrij te trappelen, bijvoorbeeld op een kleed op de grond."],
+    ["💪","Hoofd even op","", "In buikligging tilt je baby het hoofd kort op. Dat versterkt nek- en rugspieren. Motoriek ontwikkelt zich van hoofd naar voeten: eerst het hoofd, dan romp, dan benen.", "Een paar keer per dag kort buikligging terwijl je baby wakker is, bijvoorbeeld op je borst."],
+    ["🙆","Steunt op onderarmen","", "Het hoofd is nu stabiel en je baby duwt zich op de onderarmen omhoog. Zo kan het rondkijken en de wereld vanuit een nieuw perspectief zien.", "Leg een speeltje of spiegeltje voor je baby tijdens buikligging."],
+    ["🔄","Rolt om","", "Eerst meestal van buik naar rug, later andersom. Omrollen is de eerste manier om zelf van plek te veranderen.", "Laat je baby op de grond oefenen. Nooit alleen laten op commode of bank."],
+    ["🪑","Zit zelf, kruipt","", "Je baby zit stabiel zonder steun en komt zelf tot zit. Veel baby's gaan kruipen of op de billen schuiven. Sommige slaan kruipen over; ook dat is normaal.", "Maak een veilige vloer met iets interessants om naartoe te bewegen."],
+    ["🧍","Staat, loopt langs meubels","", "Je baby trekt zich op tot staan en zet zijwaarts stapjes langs bank of tafel. Benen en evenwicht worden sterk genoeg voor los lopen.", "Blote voeten op de vloer geven de beste grip en het meeste gevoel."],
+    ["👣","Loopt los","", "De meeste kinderen lopen tussen 9 en 18 maanden los. In het begin wijdbeens, met de armen omhoog voor evenwicht.", "Een duwkarretje helpt. Een loopstoeltje helpt juist niet."],
+    ["🧗","Klimt op de bank","", "Lopen gaat steeds steviger en je kind gaat klimmen: op en van de bank, met hulp een trapje op. Het test wat het eigen lichaam kan.", "Laat veilig klimmen toe en blijf in de buurt, in plaats van het te verbieden."]] },
+  { name: "Fijne motoriek", sub: "handen, vingers", c: "var(--fijn)", cells: [
+    ["✊","Grijpreflex","", "Raak de handpalm aan en je baby knijpt stevig in je vinger. Dat is een reflex, nog geen bewuste greep. De handjes zijn meestal tot vuistjes gebald.", "Leg je vinger in het handje: een fijn contactmoment."],
+    ["🖐️","Handjes gaan open","", "De grijpreflex wordt zwakker en de handjes ontspannen. Je baby ontdekt de eigen handen en kijkt er lang naar.", "Geef een lichte, zachte rammelaar om vast te houden."],
+    ["🤲","Grijpt met hele hand","palmaire greep", "Je baby grijpt nu bewust, met de hele hand tegelijk, en brengt alles naar de mond.", "Bied veilige speeltjes in verschillende vormen aan, binnen handbereik."],
+    ["🔁","Pakt over van hand naar hand","", "Een speeltje gaat van de ene naar de andere hand. Daarvoor moeten beide lichaamshelften samenwerken.", "Geef een tweede speeltje als je baby er al één vasthoudt."],
+    ["🫳","Harkgreep","", "Kleine dingen worden met alle vingers tegelijk naar zich toe geharkt. De duim begint mee te doen.", "Laat zachte stukjes eten zelf pakken, onder toezicht."],
+    ["👌","Pincetgreep","", "Duim en wijsvinger pakken samen iets kleins op, zoals een rozijn. Een grote stap in precisie.", "Let op kleine voorwerpen: alles kan nog in de mond."],
+    ["🧱","Stapelt 2 blokjes","", "Je kind zet een blokje gericht neer én laat het los. Bewust loslaten is moeilijker dan pakken.", "Bouw samen torens en laat je kind ze omgooien."],
+    ["🖍️","Krast met krijt","", "Met een vuistgreep komen de eerste krassen. Je kind ontdekt dat een beweging een spoor achterlaat.", "Dikke krijtjes en een groot vel papier op de vloer."]] },
+  { name: "Sensomotoriek", sub: "zintuigen + beweging", c: "var(--senso)", cells: [
+    ["👀","Ziet scherp op 20–30 cm","", "Pasgeborenen zien wazig, behalve op ongeveer de afstand tot jouw gezicht tijdens het voeden. Gezichten en sterke contrasten trekken de meeste aandacht.", "Houd je gezicht dichtbij als je praat."],
+    ["👁️","Volgt met de ogen","", "Je baby volgt een bewegend gezicht of voorwerp met de ogen. Eerst schokkerig, later steeds vloeiender.", "Beweeg langzaam een zwart-wit speeltje van links naar rechts."],
+    ["👄","Verkent met de mond","", "De mond is het gevoeligste onderzoeksinstrument. Door te sabbelen leert je baby vorm, hardheid en temperatuur kennen.", "Zorg voor schone, veilige bijtspeeltjes."],
+    ["🎯","Reikt gericht","oog-handcoördinatie", "Zien en bewegen werken samen: je baby ziet iets, schat de afstand en reikt er precies naartoe. Piaget zag dit als de koppeling van zien en grijpen.", "Houd speeltjes net binnen bereik en verplaats ze af en toe."],
+    ["🥣","Voelt en onderzoekt texturen","", "Je baby verkent bewust: kloppen, wrijven, knijpen, proeven. Zo ontstaat een beeld van hoe dingen aanvoelen.", "Een mandje met materialen: hout, stof, een borstel, een metalen lepel."],
+    ["⚖️","Evenwicht bij staan","", "Evenwichtsorgaan, spiergevoel en ogen werken samen om rechtop te blijven. Elke val is oefening.", "Laat oefenen op verschillende ondergronden: gras, zand, kleed."],
+    ["🦶","Past zich aan ondergrond aan","propriocepsis", "Je kind voelt met de voeten en past de stap aan op een helling, gras of drempel. Het weet steeds beter waar het eigen lichaam is.", "Laat buiten lopen op ongelijke grond."],
+    ["🎠","Zoekt schommelen en draaien op","", "Draaien, schommelen en rennen prikkelen het evenwichtsorgaan. Kinderen zoeken die sensatie zelf op en worden er handiger door.", "Schommelen, van een helling rollen, samen dansen."]] },
+  { group: "Contact & gevoel" },
+  { name: "Sociomotoriek", sub: "contact via het lichaam", c: "var(--socmo)", cells: [
+    ["🤱","Vleit zich tegen je aan","", "Je baby vormt het lijfje naar jou als je het vasthoudt. Dit lichamelijke contact is de basis van hechting en helpt het stresssysteem tot rust te komen.", "Huid-op-huidcontact en dragen geven rust."],
+    ["😮","Spiegelt je mimiek","", "Je baby reageert op jouw gezichtsuitdrukking met eigen mimiek en beweging. Zo ontstaan de eerste gesprekjes zonder woorden.", "Overdrijf je gezichtsuitdrukkingen en wacht op een reactie."],
+    ["🙌","Spartelt blij als je komt","", "Als je eraan komt, beweegt je baby opgewonden met armen en benen. Het lichaam zegt: ik ken jou en ik wil contact.", "Reageer enthousiast; zo leert je baby dat signalen werken."],
+    ["🫴","Reikt naar jou","", "Je baby reikt naar je gezicht of haren, of naar jou om opgepakt te worden. Bewegen wordt een manier om contact te zoeken.", "Laat je gezicht verkennen en benoem wat je baby aanraakt."],
+    ["🙋","Armen omhoog: optillen!","", "Je baby steekt de armen op om opgetild te worden. Een van de eerste bewuste gebaren met een duidelijke boodschap.", "Benoem het: ‘Wil je op de arm?’"],
+    ["👋","Zwaait, klapt mee","imitatie", "Je kind doet gebaren na in spelletjes zoals zwaaien en klap eens in je handjes. Nadoen is een krachtige manier van leren.", "Zing liedjes met gebaren."],
+    ["👉","Wijst om te delen","gedeelde aandacht", "Je kind wijst niet alleen om iets te krijgen, maar ook om jou iets te laten zien. Volgens Tomasello een belangrijke stap naar taal en samen denken.", "Kijk mee en benoem: ‘Ja, een hond!’"],
+    ["🧹","Doet jouw handelingen na","uitgestelde imitatie", "Vegen, bellen, roeren in een pannetje: je kind doet na wat het jou ziet doen, ook later nog uit het geheugen.", "Geef (speelgoed)versies van huishoudspullen."]] },
+  { name: "Sociaal-emotioneel", c: "var(--soc)", cells: [
+    ["😌","Kalmeert bij jou","co-regulatie", "Je baby kan zichzelf nog niet kalmeren. Jouw stem, geur en armen helpen het lichaam rustig te worden.", "Je kunt een baby niet verwennen met troost."],
+    ["😊","Sociale glimlach","", "Rond 6 tot 8 weken lacht je baby bewust naar mensen, niet meer alleen als reflex.", "Lach terug en praat; zo groeit de band."],
+    ["😄","Lacht hardop","", "Je baby schatert om spelletjes, kietelen en gekke geluiden. Plezier delen versterkt de band.", "Herhaal wat werkt: baby's houden van voorspelbare grapjes."],
+    ["🧑‍🍼","Herkent eigen mensen","", "Je baby maakt duidelijk onderscheid tussen bekende en onbekende mensen en heeft een voorkeur voor de vaste verzorgers.", "Vaste gezichten en vaste routines geven veiligheid."],
+    ["😟","Eenkennig","", "Vreemden worden spannend en je baby klampt zich aan jou vast. Dit is een teken van gezonde hechting.", "Geef tijd om op jouw schoot te wennen; dwing niets."],
+    ["😭","Protest bij afscheid","scheidingsangst", "Je kind begrijpt dat jij weggaat en protesteert. Scheidingsangst is het sterkst tussen ongeveer 10 en 18 maanden.", "Neem kort en duidelijk afscheid. Sluip niet weg."],
+    ["🧭","Gaat op pad, komt terug","veilige basis", "Je kind verkent de wereld en komt steeds even bij jou terug om bij te tanken. Ainsworth noemde de ouder daarom de veilige basis.", "Blijf beschikbaar en kijk mee naar de ontdekkingen."],
+    ["🙅","‘Nee!’ Zelf doen","autonomie", "Je kind ontdekt een eigen wil. Erikson noemt dit de fase van autonomie tegenover schaamte en twijfel. ‘Nee’ zeggen hoort erbij.", "Geef kleine keuzes: ‘De rode of de blauwe beker?’"]] },
+  { group: "Denken & taal" },
+  { name: "Cognitief", c: "var(--cog)", cells: [
+    ["👂","Herkent jouw stem","", "In de baarmoeder hoorde je baby je stem al. Na de geboorte heeft het een voorkeur voor die bekende stem en geur.", "Praat en zing veel, ook als het lijkt alsof er niets gebeurt."],
+    ["👍","Herhaalt toevallige beweging","primaire circulaire reactie", "Je baby doet per ongeluk iets fijns, zoals duimzuigen, en herhaalt het. Piaget noemde dit gericht op het eigen lichaam.", "Geef ruimte om de eigen handjes te ontdekken."],
+    ["🔔","Herhaalt een leuk effect","secundaire circulaire reactie", "Nu gaat het om effecten buiten het lichaam: schoppen laat de mobiel bewegen, schudden maakt geluid. Je baby leert oorzaak en gevolg.", "Rammelaars en speeltjes die reageren op beweging."],
+    ["🧐","Onderzoekt nieuwe dingen","", "Nieuwe voorwerpen worden lang bekeken, gedraaid en geproefd. Baby's kijken langer naar wat nieuw of onverwacht is; zo meten onderzoekers wat ze al begrijpen.", "Wissel speelgoed af in plaats van alles tegelijk aan te bieden."],
+    ["🙈","Zoekt verstopt speeltje","objectpermanentie", "Je baby begrijpt dat iets blijft bestaan als het uit het zicht is. Daarom ontstaan rond deze tijd ook eenkennigheid en scheidingsangst.", "Speel kiekeboe en verstop een speeltje onder een doek."],
+    ["🤔","Kijkt naar jou bij twijfel","sociale referentie", "Bij iets nieuws kijkt je kind naar jouw gezicht om te zien of het veilig is. Jouw reactie bepaalt mee wat het daarna doet.", "Laat met gezicht en stem zien dat iets oké is."],
+    ["🧪","Laat vallen en kijkt","tertiaire circulaire reactie", "Je kind experimenteert: wat gebeurt er als ik het anders doe? Piaget zag het kind hier als kleine wetenschapper.", "Water, zand en bakjes: laat proefjes doen."],
+    ["🪞","Herkent zichzelf","spiegeltest", "Met een vlekje op de neus voor de spiegel voelt je kind aan de eigen neus: het herkent zichzelf. Dit zelfbewustzijn ontstaat tussen 15 en 24 maanden.", "Spiegelspelletjes: ‘Waar is je neus?’"]] },
+  { name: "Taal", c: "var(--taal)", cells: [
+    ["😢","Huilen als signaal","", "Huilen is de eerste vorm van communicatie. Ouders horen al snel verschil tussen honger, pijn en moeheid.", "Reageer snel; zo leert je baby dat communiceren werkt."],
+    ["🗣️","Koert","", "Zachte klinkers als ‘oe’ en ‘aa’ ontstaan. Je baby speelt met de eigen stem.", "Doe de geluidjes na: je baby geniet van de echo."],
+    ["💬","Om de beurt geluidjes","beurtwisseling", "Jij praat, je baby antwoordt, jij weer. Deze beurtwisseling is de basis van elk gesprek.", "Wacht na je zin en geef je baby tijd om te antwoorden."],
+    ["🗨️","Brabbelt ba-ba-ba","canoniek brabbelen", "Herhaalde lettergrepen verschijnen tussen 6 en 10 maanden. Brabbelt je baby rond 10 maanden nog niet, laat dan het gehoor controleren.", "Brabbel terug en benoem dingen om je heen."],
+    ["📛","Reageert op eigen naam","", "Je baby kijkt op bij de eigen naam en begrijpt woorden als ‘nee’ en ‘dag’. Begrijpen loopt voor op spreken.", "Gebruik vaak de naam van je baby."],
+    ["🔤","Eerste woordje","", "Rond de eerste verjaardag komt het eerste woord met betekenis, vaak ‘mama’, ‘papa’, een dier of een voorwerp.", "Herhaal en breid uit: ‘Bal! Ja, een rode bal.’"],
+    ["📦","Wijst aan wat je noemt","", "Je kind begrijpt veel meer woorden dan het zegt. Vraag ‘Waar is de lamp?’ en het wijst.", "Kijk samen boekjes en wijs plaatjes aan."],
+    ["📈","Woordenschat groeit","woordenexplosie", "Rond 18 maanden gebruiken veel kinderen 10 tot 50 woorden, en vaak komt een snelle groei op gang.", "Lees voor en benoem; praten werkt beter dan een scherm."]] }
+];
+
+// Theoretisch kader / bron voor de tijdsbepaling, per rij in dezelfde volgorde als de leeftijden
+const KADER = {
+  "Grove motoriek": [
+    "Neonatale neurologie (Prechtl): primitieve reflexen zijn aanwezig bij de geboorte en verdwijnen rond 3 tot 6 maanden.",
+    "Gesell: motoriek ontwikkelt van hoofd naar voeten (cefalocaudaal). Leeftijd volgens de CDC-mijlpalen (2022).",
+    "CDC-mijlpalen (2022): hoofd stabiel en opsteunen op de onderarmen bij 4 maanden.",
+    "CDC-mijlpalen (2022): omrollen van buik naar rug bij 6 maanden.",
+    "WHO Motor Development Study (2006): zitten zonder steun tussen 3,8 en 9,2 maanden, kruipen tussen 5,2 en 13,5 maanden.",
+    "WHO Motor Development Study (2006): staan met steun tussen 4,8 en 11,4 maanden, lopen met steun tussen 5,9 en 13,7 maanden.",
+    "WHO Motor Development Study (2006): los lopen tussen 8,2 en 17,6 maanden. De CDC (2022) plaatst het bij 15 maanden.",
+    "CDC-mijlpalen (2022): op en van meubels klimmen bij 18 maanden."],
+  "Fijne motoriek": [
+    "Neonatale neurologie (Prechtl): de grijpreflex is aanwezig vanaf de geboorte en verdwijnt rond 3 tot 4 maanden.",
+    "CDC-mijlpalen (2022): handjes openen bij 2 maanden.",
+    "Halverson (1931), grijpstadia: van hele-handgreep naar vingergreep. CDC (2022): speeltje vasthouden bij 4 maanden.",
+    "Gesell en Halverson: samenwerking van beide handen rond 6 tot 9 maanden. De CDC (2022) plaatst overpakken bij 9 maanden.",
+    "Halverson (1931), grijpstadia: harkgreep rond 7 tot 9 maanden.",
+    "Halverson (1931): pincetgreep rond 9 tot 12 maanden. CDC (2022): bij 12 maanden.",
+    "CDC-mijlpalen (2022): twee voorwerpen stapelen bij 15 maanden.",
+    "Gesell-ontwikkelingsnormen: krassen met een vuistgreep rond 15 tot 18 maanden."],
+  "Sensomotoriek": [
+    "Onderzoek naar zien bij pasgeborenen (Fantz, 1963; Banks & Salapatek): beperkte scherpte en een voorkeur voor gezichten en contrast.",
+    "CDC-mijlpalen (2022): bewegingen volgen met de ogen bij 2 maanden.",
+    "Piaget, sensomotorische fase: de mond als eerste verkenningsinstrument. CDC (2022): handen naar de mond bij 4 maanden.",
+    "Piaget, substadium 3 (4–8 maanden): coördinatie van zien en grijpen. CDC (2022): reiken naar een speeltje bij 6 maanden.",
+    "Piaget, substadium 4 (8–12 maanden): actief en doelgericht verkennen. Ayres: sensorische integratie.",
+    "WHO Motor Development Study (2006): zelfstandig staan tussen 6,9 en 16,9 maanden. Ayres: samenwerking van evenwicht, spiergevoel en zien.",
+    "Ayres: sensorische integratie en propriocepsis. Adolph: onderzoek naar hoe beginnende lopers zich aanpassen aan hellingen.",
+    "Ayres: sensorische integratie, het evenwichtsorgaan. Hiervoor bestaat geen vaste leeftijdsnorm; het past bij de periode na het leren lopen."],
+  "Sociomotoriek": [
+    "Bowlby, hechtingstheorie: fase van voorhechting (0–6 weken), lichamelijk contact als regulatie.",
+    "Trevarthen: primaire intersubjectiviteit vanaf ongeveer 2 maanden. Tronick: still-face-onderzoek naar wederzijdse afstemming.",
+    "Bowlby: hechting in wording (6 weken tot 6–8 maanden). Trevarthen: primaire intersubjectiviteit.",
+    "Bowlby: hechting in wording. CDC (2022): reiken bij 6 maanden.",
+    "CDC-mijlpalen (2022): armen omhoog om opgepakt te worden bij 9 maanden.",
+    "CDC-mijlpalen (2022): zwaaien en klap-spelletjes bij 12 maanden. Piaget: imitatie in substadium 4 en 5.",
+    "Tomasello; Carpenter e.a. (1998): gedeelde aandacht en wijzen om te delen ontstaan tussen 9 en 15 maanden.",
+    "Piaget en Meltzoff: uitgestelde imitatie rond 14 tot 18 maanden. CDC (2022): klusjes nadoen bij 18 maanden."],
+  "Sociaal-emotioneel": [
+    "Bowlby, hechtingstheorie. Tronick en Feldman: co-regulatie tussen ouder en baby.",
+    "Spitz en CDC-mijlpalen (2022): sociale glimlach rond 6 tot 8 weken, mijlpaal bij 2 maanden.",
+    "CDC-mijlpalen (2022): grinniken bij 4 maanden, hardop lachen bij 6 maanden.",
+    "Bowlby: hechting in wording, voorkeur voor vaste verzorgers. CDC (2022): bekende mensen herkennen bij 6 maanden.",
+    "Spitz: ‘achtmaandsangst’ (vreemdenangst) rond 7 tot 9 maanden. Bowlby: begin van de echte hechting.",
+    "Bowlby en Ainsworth: scheidingsangst is het sterkst rond 10 tot 18 maanden; onderzocht met de Vreemde Situatie-test vanaf 12 maanden.",
+    "Ainsworth: veilige basis, onderzocht met de Vreemde Situatie-test (12–18 maanden). Mahler: oefenfase.",
+    "Erikson: psychosociale fase autonomie tegenover schaamte en twijfel, van ongeveer 18 maanden tot 3 jaar."],
+  "Cognitief": [
+    "DeCasper & Fifer (1980): pasgeborenen hebben een voorkeur voor de stem van hun moeder.",
+    "Piaget, substadium 2: primaire circulaire reacties (1–4 maanden).",
+    "Piaget, substadium 3: secundaire circulaire reacties (4–8 maanden). Rovee-Collier: mobiel-experimenten met jonge baby's.",
+    "Fantz: voorkeur voor nieuwe prikkels (habituatie-onderzoek). Baillargeon: onderzoek met onverwachte gebeurtenissen.",
+    "Piaget, substadium 4 (8–12 maanden): objectpermanentie. Baillargeon vond met andere methoden al eerder aanwijzingen, rond 3 tot 5 maanden.",
+    "Sorce e.a. (1985): sociale referentie bij 12 maanden, onderzocht met de visuele klif.",
+    "Piaget, substadium 5: tertiaire circulaire reacties (12–18 maanden).",
+    "Amsterdam (1972), spiegeltest: zelfherkenning tussen 15 en 24 maanden. Piaget: substadium 6 begint rond 18 maanden."],
+  "Taal": [
+    "Wolff (1969): baby's hebben verschillende huilpatronen. Huilen als eerste communicatie.",
+    "Stark en Oller, fasen van klankontwikkeling: koeren rond 2 tot 4 maanden. CDC (2022): geluidjes bij 2 maanden.",
+    "Trevarthen: protoconversaties. CDC (2022): geluidjes teruggeven bij 4 maanden.",
+    "Oller (2000): canoniek brabbelen tussen 6 en 10 maanden; uitblijven na 10 maanden is een signaal.",
+    "CDC-mijlpalen (2022): reageren op de eigen naam bij 9 maanden. Mandel e.a. (1995): naamherkenning al rond 4,5 maand.",
+    "CDC (2022) en Fenson e.a. (1994, MacArthur-Bates CDI): eerste woord rond 10 tot 14 maanden.",
+    "Fenson e.a. (1994, MacArthur-Bates CDI): woordbegrip loopt ver voor op spreken.",
+    "Fenson e.a. (1994): woordenschatsprong rond 18 maanden, met grote verschillen tussen kinderen. CDC (2022): 3 of meer woorden bij 18 maanden."]
+};
+
+const tbl = document.getElementById("tbl");
+tbl.innerHTML =
+  `<thead><tr><th class="corner"></th>${AGES.map((a, i) =>
+    `<th data-col="${i}"><span class="num">${a.m}<small>mnd</small></span><span class="phase">${a.piaget}</span><span class="phase">${a.hecht}</span></th>`).join("")}</tr></thead>
+  <tbody>${ROWS.map((r, ri) => r.group
+    ? `<tr class="group"><th>${r.group}</th>${AGES.map((_, i) => `<td data-col="${i}"></td>`).join("")}</tr>`
+    : `<tr style="--c:${r.c}"><th scope="row"><span>${r.name}</span>${r.sub ? `<em>${r.sub}</em>` : ""}</th>${r.cells.map(([ic, t, s], i) =>
+        `<td data-col="${i}"><button type="button" class="cell" data-r="${ri}" data-i="${i}" aria-haspopup="dialog"><span class="ic" aria-hidden="true">${ic}</span>${t}${s ? `<small>${s}</small>` : ""}</button></td>`).join("")}</tr>`
+  ).join("")}</tbody>`;
+
+// Uitleg-paneel
+const sheet = document.getElementById("sheet");
+let lastBtn = null;
+function openSheet(btn) {
+  const r = ROWS[+btn.dataset.r], i = +btn.dataset.i, a = AGES[i];
+  const [ic, t, s, uitleg, tip] = r.cells[i];
+  sheet.style.setProperty("--c", r.c);
+  document.getElementById("sIc").textContent = ic;
+  document.getElementById("sTitle").textContent = t;
+  document.getElementById("sMeta").textContent = `${r.name} · ${a.m === 0 ? "0–1" : a.m} maanden`;
+  const term = document.getElementById("sTerm");
+  term.textContent = s; term.hidden = !s;
+  document.getElementById("sText").textContent = uitleg;
+  document.getElementById("sTip").textContent = tip;
+  document.getElementById("sKader").textContent = KADER[r.name][i];
+  lastBtn = btn;
+  sheet.hidden = false;
+  document.getElementById("sClose").focus();
+}
+let backToQuiz = false;
+function closeSheet() {
+  sheet.hidden = true;
+  if (backToQuiz) { backToQuiz = false; quiz.hidden = false; document.getElementById("qNext").focus(); return; }
+  lastBtn?.focus();
+}
+tbl.addEventListener("click", e => { const b = e.target.closest(".cell"); if (b) openSheet(b); });
+document.getElementById("sClose").onclick = closeSheet;
+sheet.addEventListener("click", e => { if (e.target === sheet) closeSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hidden) { e.stopImmediatePropagation(); closeSheet(); } });
+
+// Quiz
+const quiz = document.getElementById("quiz");
+const ROWLIST = ROWS.filter(r => !r.group);
+const POOL = ROWLIST.flatMap(r => r.cells.map((_, i) => ({ r, i })));
+let q = null, pick = { d: null, a: null }, score = { ok: 0, n: 0 }, order = [];
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function renderOpts() {
+  document.getElementById("qDomains").innerHTML = ROWLIST.map((r, k) =>
+    `<button type="button" class="opt" data-c data-d="${k}" style="--oc:${r.c}" aria-pressed="false">${r.name}</button>`).join("");
+  document.getElementById("qAges").innerHTML = AGES.map((a, k) =>
+    `<button type="button" class="opt" data-a="${k}" aria-pressed="false">${a.m} mnd</button>`).join("");
+}
+function newQuestion() {
+  if (!order.length) order = shuffle([...POOL.keys()]);
+  q = POOL[order.pop()];
+  pick = { d: null, a: null };
+  const [ic, t] = q.r.cells[q.i];
+  document.getElementById("qTile").innerHTML = `<span class="ic" aria-hidden="true">${ic}</span>${t}`;
+  renderOpts();
+  document.getElementById("qFeedback").hidden = true;
+  document.getElementById("qCheck").hidden = false;
+  document.getElementById("qCheck").disabled = true;
+  document.getElementById("qNext").hidden = true;
+  document.getElementById("qShow").hidden = true;
+  updateScore();
+}
+function updateScore() {
+  document.getElementById("qScore").textContent = score.n ? `Score ${score.ok} van ${score.n * 2} punten` : "Quiz · 2 punten per tegel";
+}
+quiz.addEventListener("click", e => {
+  const b = e.target.closest(".opt");
+  if (!b || b.disabled) return;
+  const key = b.dataset.d !== undefined ? "d" : "a";
+  b.parentElement.querySelectorAll(".opt").forEach(o => o.setAttribute("aria-pressed", "false"));
+  b.setAttribute("aria-pressed", "true");
+  pick[key] = +(b.dataset.d ?? b.dataset.a);
+  document.getElementById("qCheck").disabled = pick.d === null || pick.a === null;
+});
+document.getElementById("qCheck").onclick = () => {
+  const rightD = ROWLIST.indexOf(q.r), rightA = q.i;
+  const okD = pick.d === rightD, okA = pick.a === rightA;
+  const near = !okA && Math.abs(pick.a - rightA) === 1;
+  score.n++; score.ok += okD + okA;
+  quiz.querySelectorAll(".opt").forEach(o => o.disabled = true);
+  quiz.querySelector(`[data-d="${rightD}"]`).classList.add("right");
+  quiz.querySelector(`[data-a="${rightA}"]`).classList.add("right");
+  if (!okD) quiz.querySelector(`[data-d="${pick.d}"]`).classList.add("wrong");
+  if (!okA) quiz.querySelector(`[data-a="${pick.a}"]`).classList.add("wrong");
+  const head = okD && okA ? "🎉 Helemaal goed!" : okD || okA ? "👍 Half goed" : "🤔 Nog niet";
+  const [, , s, uitleg] = q.r.cells[q.i];
+  const fb = document.getElementById("qFeedback");
+  fb.innerHTML = `<strong>${head}</strong>
+    <span>Deze tegel hoort bij <b>${q.r.name}</b>, <b>${AGES[rightA].m} maanden</b>${s ? ` (${s})` : ""}.${near ? " Je zat er maar één stap naast." : ""}</span>
+    <span>${uitleg}</span>`;
+  fb.hidden = false;
+  document.getElementById("qCheck").hidden = true;
+  document.getElementById("qNext").hidden = false;
+  document.getElementById("qShow").hidden = false;
+  document.getElementById("qNext").focus();
+  updateScore();
+};
+document.getElementById("qNext").onclick = newQuestion;
+document.getElementById("qShow").onclick = () => {
+  const btn = tbl.querySelector(`.cell[data-r="${ROWS.indexOf(q.r)}"][data-i="${q.i}"]`);
+  quiz.hidden = true;
+  openSheet(btn);
+  backToQuiz = true;
+};
+let quizOpener = null;
+function openQuiz() { quizOpener = document.activeElement; quiz.hidden = false; if (!q) newQuestion(); document.getElementById("qClose").focus(); }
+function closeQuiz() { quiz.hidden = true; quizOpener?.focus(); }
+document.getElementById("quizBtn").onclick = openQuiz;
+document.getElementById("qClose").onclick = closeQuiz;
+quiz.addEventListener("click", e => { if (e.target === quiz) closeQuiz(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !quiz.hidden) closeQuiz(); });
+
+const dob = document.getElementById("dob");
+dob.max = new Date().toISOString().slice(0, 10);
+try { dob.value = localStorage.getItem("babymijlpalen.dob") || ""; } catch (e) {}
+
+function mark() {
+  tbl.querySelectorAll(".now").forEach(el => el.classList.remove("now"));
+  tbl.querySelectorAll(".badge").forEach(el => el.remove());
+  if (!dob.value) return;
+  const months = (Date.now() - new Date(dob.value + "T00:00:00")) / 864e5 / 30.4375;
+  if (months < 0) return;
+  let col = 0;
+  AGES.forEach((a, i) => { if (months >= a.m - 0.5) col = i; });
+  tbl.querySelectorAll(`[data-col="${col}"]`).forEach(el => el.classList.add("now"));
+  const head = tbl.querySelector(`thead [data-col="${col}"]`);
+  head.insertAdjacentHTML("beforeend", `<span class="badge">Nu</span>`);
+  const wrap = tbl.parentElement;
+  if (wrap.scrollWidth > wrap.clientWidth) wrap.scrollLeft = Math.max(0, head.offsetLeft - 170);
+}
+dob.addEventListener("change", () => { try { localStorage.setItem("babymijlpalen.dob", dob.value); } catch (e) {} mark(); });
+mark();
+</script>
+</body>
+</html>
